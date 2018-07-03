@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.media.CamcorderProfile;
 import android.os.Build;
+import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.IntDef;
@@ -311,6 +312,10 @@ public class CameraView extends FrameLayout {
         int paddingX = (int) ((width - correctWidth) / 2);
         int paddingY = (int) ((height - correctHeight) / 2);
         preview.layout(paddingX, paddingY, correctWidth + paddingX, correctHeight + paddingY);
+
+        if (changed) {
+            adjustRatioIfNeeded();
+        }
     }
 
     @Override
@@ -617,6 +622,36 @@ public class CameraView extends FrameLayout {
 
     public Size getPreviewSize() {
         return mImpl.getPreviewSize();
+    }
+
+    void adjustRatioIfNeeded() {
+        if (mGravity != GRAVITY_CENTER_FIT && mGravity != GRAVITY_CENTER_FILL) {
+            return;
+        }
+
+        // it's important to adjust ratio on the next main thread frame
+        // because usually current method called from the 'layout' method
+        // and requestLayout() do nothing
+        new Handler(getContext().getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                adjustRatio();
+            }
+        });
+    }
+
+    void adjustRatio() {
+        View preview = getView();
+        if (preview == null) {
+            return;
+        }
+
+        //  values reversed intentionally
+        int w = getMeasuredHeight();
+        int h = getMeasuredWidth();
+
+        AspectRatio ratio = AspectRatioChooser.closestRatio(mImpl.getSupportedAspectRatios(), w, h);
+        setAspectRatio(ratio);
     }
 
     private class CallbackBridge implements CameraViewImpl.Callback {

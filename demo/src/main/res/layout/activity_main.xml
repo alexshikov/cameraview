@@ -29,7 +29,8 @@
         android:layout_margin="16dp"
         android:scaleType="centerCrop"
         android:background="@android:color/black"
-        app:gravity="centerFill"/>
+        app:aspectRatio="1:1"
+        app:gravity="centerFit"/>
 
     <!--<com.google.android.cameraview.CameraView-->
         <!--android:id="@+id/camera"-->
