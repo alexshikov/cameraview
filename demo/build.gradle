@@ -38,6 +38,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "com.android.support:design:$supportLibraryVersion"
     implementation project(':library')
+    implementation project(':cameraview-vision')
 
     // Tests
     testImplementation 'junit:junit:4.12'
