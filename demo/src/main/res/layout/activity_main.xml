@@ -22,7 +22,7 @@
     tools:context=".MainActivity">
 
     <!-- Margins added to ensure camera preview is actually cropped -->
-    <com.google.android.cameraview.CameraView
+    <com.google.android.cameraview.vision.BarcodeScannerView
         android:id="@+id/camera"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

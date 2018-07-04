@@ -46,6 +46,7 @@ import android.widget.Toast;
 import com.google.android.cameraview.AspectRatio;
 import com.google.android.cameraview.CameraView;
 import com.google.android.cameraview.vision.BarcodeProcessor;
+import com.google.android.cameraview.vision.BarcodeScannerView;
 import com.google.android.cameraview.vision.FrameMetadata;
 import com.google.android.cameraview.vision.FrameProcessorDelegate;
 import com.google.android.gms.vision.barcode.Barcode;
@@ -91,11 +92,9 @@ public class MainActivity extends AppCompatActivity implements
 
     private int mCurrentFlash;
 
-    private CameraView mCameraView;
+    private BarcodeScannerView mCameraView;
 
     private Handler mBackgroundHandler;
-
-    private BarcodeProcessor mBarcodeProcessor;
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
@@ -114,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mCameraView = (CameraView) findViewById(R.id.camera);
+        mCameraView = findViewById(R.id.camera);
         if (mCameraView != null) {
             mCameraView.addCallback(mCallback);
         }
@@ -129,24 +128,18 @@ public class MainActivity extends AppCompatActivity implements
             actionBar.setDisplayShowTitleEnabled(false);
         }
 
+        mCameraView.setBarcodeType(Barcode.QR_CODE);
         mCameraView.setScanning(true);
-        mBarcodeProcessor = new BarcodeProcessor(this);
-        mBarcodeProcessor.setDelegate(new FrameProcessorDelegate<SparseArray<Barcode>>() {
+        mCameraView.setFrameDelegate(new FrameProcessorDelegate<SparseArray<Barcode>>() {
             @Override
             public void onSuccess(SparseArray<Barcode> result) {
-                if (result.size() == 0)
-                    return;
-
-                Log.d(TAG, "Found barcodes: " + result.size());
-                for (int i = 0; i < result.size(); i++) {
-                    Barcode barcode = result.get(result.keyAt(i));
-                    Log.d(TAG, "Barcode: " + barcode.displayValue);
+                if (result.size() > 0) {
+                    Log.d(TAG, "Found barcodes: "+ result.size());
                 }
             }
 
             @Override
             public void onError(Exception e) {
-                Log.d(TAG,"Barcode detection failure: "+ e);
             }
         });
     }
@@ -262,13 +255,6 @@ public class MainActivity extends AppCompatActivity implements
         return mBackgroundHandler;
     }
 
-    static int getCorrectCameraRotation(int rotation, int facing) {
-        if (facing == CameraView.FACING_FRONT) {
-            return (rotation - 90 + 360) % 360;
-        } else {
-            return (-rotation + 90 + 360) % 360;
-        }
-    }
 
     private CameraView.Callback mCallback
             = new CameraView.Callback() {
@@ -311,14 +297,6 @@ public class MainActivity extends AppCompatActivity implements
                     }
                 }
             });
-        }
-
-        @Override
-        public void onFramePreview(CameraView cameraView, byte[] data, int width, int height, int orientation) {
-            int facing = cameraView.getFacing();
-            int rotation = getCorrectCameraRotation(orientation, facing);
-
-            mBarcodeProcessor.process(data, new FrameMetadata(width, height, rotation, facing));
         }
     };
 
