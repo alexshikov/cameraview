@@ -46,6 +46,7 @@ import android.widget.Toast;
 import com.google.android.cameraview.AspectRatio;
 import com.google.android.cameraview.CameraView;
 import com.google.android.cameraview.vision.BarcodeProcessor;
+import com.google.android.cameraview.vision.BarcodeProcessorDelegate;
 import com.google.android.cameraview.vision.BarcodeScannerView;
 import com.google.android.cameraview.vision.FrameMetadata;
 import com.google.android.cameraview.vision.FrameProcessorDelegate;
@@ -130,16 +131,10 @@ public class MainActivity extends AppCompatActivity implements
 
         mCameraView.setBarcodeType(Barcode.QR_CODE);
         mCameraView.setScanning(true);
-        mCameraView.setFrameDelegate(new FrameProcessorDelegate<SparseArray<Barcode>>() {
+        mCameraView.setFrameDelegate(new BarcodeProcessorDelegate() {
             @Override
-            public void onSuccess(SparseArray<Barcode> result) {
-                if (result.size() > 0) {
-                    Log.d(TAG, "Found barcodes: "+ result.size());
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
+            public void onBarcodeDetected(Barcode barcode) {
+                Log.d(TAG, "Found barcode: " + barcode.rawValue);
             }
         });
     }
