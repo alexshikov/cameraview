@@ -50,6 +50,10 @@ public class BarcodeScannerView extends CameraView {
         });
     }
 
+    public BarcodeProcessor getBarcodeProcessor() {
+        return mBarcodeProcessor;
+    }
+
     public void setFrameDelegate(FrameProcessorDelegate<SparseArray<Barcode>> delegate) {
         mBarcodeProcessor.setDelegate(delegate);
     }

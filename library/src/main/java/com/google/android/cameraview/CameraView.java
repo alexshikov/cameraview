@@ -624,6 +624,10 @@ public class CameraView extends FrameLayout {
         return mImpl.getPreviewSize();
     }
 
+    public boolean isUsingCamera2() {
+        return !(mImpl instanceof Camera1);
+    }
+
     void adjustRatioIfNeeded() {
         if (mGravity != GRAVITY_CENTER_FIT && mGravity != GRAVITY_CENTER_FILL) {
             return;
