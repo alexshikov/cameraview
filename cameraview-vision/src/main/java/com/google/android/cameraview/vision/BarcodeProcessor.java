@@ -31,6 +31,8 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.nio.ByteBuffer;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class BarcodeProcessor extends FrameProcessorBase<SparseArray<Barcode>> {
 
@@ -40,14 +42,18 @@ public class BarcodeProcessor extends FrameProcessorBase<SparseArray<Barcode>> {
 
     private int mBarcodeType = Barcode.ALL_FORMATS;
 
+    private Executor mExecutor;
+
     public BarcodeProcessor(Context context) {
         mBuilder = new BarcodeDetector.Builder(context)
                 .setBarcodeFormats(mBarcodeType);
+
+        mExecutor = Executors.newFixedThreadPool(1);
     }
 
     @Override
     protected Task<SparseArray<Barcode>> detect(byte[] data, FrameMetadata metadata) {
-        return Tasks.call(new DetectBarcode(data, metadata));
+        return Tasks.call(mExecutor, new DetectBarcode(data, metadata));
     }
 
     // Public API
@@ -104,6 +110,7 @@ public class BarcodeProcessor extends FrameProcessorBase<SparseArray<Barcode>> {
 
         @Override
         public SparseArray<Barcode> call() throws Exception {
+
             // If the frame has different dimensions, create another barcode detector.
             // Otherwise we will most likely get nasty "inconsistent image dimensions" error from detector
             // and no barcode will be detected.
