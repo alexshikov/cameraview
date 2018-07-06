@@ -20,6 +20,7 @@
 package com.google.android.cameraview.vision;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
 import android.util.SparseArray;
 
@@ -49,6 +50,19 @@ public class BarcodeProcessor extends FrameProcessorBase<SparseArray<Barcode>> {
                 .setBarcodeFormats(mBarcodeType);
 
         mExecutor = Executors.newFixedThreadPool(1);
+    }
+
+    public SparseArray<Barcode> detect(Bitmap bitmap) {
+
+        if (!isOperational()) {
+            return null;
+        }
+
+        Frame frame = new Frame.Builder()
+                .setBitmap(bitmap)
+                .build();
+
+        return mBarcodeDetector.detect(frame);
     }
 
     @Override
