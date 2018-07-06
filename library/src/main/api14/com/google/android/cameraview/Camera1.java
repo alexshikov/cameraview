@@ -27,6 +27,8 @@ import android.view.SurfaceHolder;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
@@ -209,11 +211,14 @@ class Camera1 extends CameraViewImpl implements MediaRecorder.OnInfoListener,
     @Override
     Set<AspectRatio> getSupportedAspectRatios() {
         SizeMap idealAspectRatios = mPreviewSizes;
-        for (AspectRatio aspectRatio : idealAspectRatios.ratios()) {
+        ArrayList<AspectRatio> ratios = new ArrayList<>(idealAspectRatios.ratios());
+        for (int i = ratios.size() - 1; i >= 0; i--) {
+            AspectRatio aspectRatio = ratios.get(i);
             if (mPictureSizes.sizes(aspectRatio) == null) {
                 idealAspectRatios.remove(aspectRatio);
             }
         }
+
         return idealAspectRatios.ratios();
     }
 
