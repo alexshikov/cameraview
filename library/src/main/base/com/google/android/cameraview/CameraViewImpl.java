@@ -67,6 +67,8 @@ abstract class CameraViewImpl {
 
     abstract int getFlash();
 
+    abstract boolean isFlashSupported(int flash);
+
     abstract void takePicture();
 
     abstract boolean record(String path, int maxDuration, int maxFileSize,

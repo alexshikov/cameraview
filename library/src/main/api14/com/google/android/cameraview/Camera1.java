@@ -281,6 +281,18 @@ class Camera1 extends CameraViewImpl implements MediaRecorder.OnInfoListener,
     }
 
     @Override
+    boolean isFlashSupported(int flash) {
+        if (isCameraOpened()) {
+            List<String> modes = mCameraParameters.getSupportedFlashModes();
+            String mode = FLASH_MODES.get(flash);
+            if (modes != null && modes.contains(mode)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public void setFocusDepth(float value) {
         // not supported for Camera1
     }

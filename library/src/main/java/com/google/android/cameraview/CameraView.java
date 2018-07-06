@@ -556,6 +556,10 @@ public class CameraView extends FrameLayout {
         return mImpl.getFlash();
     }
 
+    public boolean isFlashSupported(@Flash int flash) {
+        return mImpl.isFlashSupported(flash);
+    }
+
     public void setGravity(@Gravity int gravity) {
         mGravity = gravity;
     }

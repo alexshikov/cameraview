@@ -432,6 +432,11 @@ class Camera2 extends CameraViewImpl implements MediaRecorder.OnInfoListener, Me
     }
 
     @Override
+    boolean isFlashSupported(int flash) {
+        return mCameraCharacteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
+    }
+
+    @Override
     void takePicture() {
         if (mAutoFocus) {
             lockFocus();
