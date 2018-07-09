@@ -209,6 +209,18 @@ class Camera1 extends CameraViewImpl implements MediaRecorder.OnInfoListener,
     }
 
     @Override
+    boolean isFacingSupported(int facing) {
+        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+        for (int i = 0, count = Camera.getNumberOfCameras(); i < count; i++) {
+            Camera.getCameraInfo(i, cameraInfo);
+            if (cameraInfo.facing == facing) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     Set<AspectRatio> getSupportedAspectRatios() {
         SizeMap idealAspectRatios = mPreviewSizes;
         ArrayList<AspectRatio> ratios = new ArrayList<>(idealAspectRatios.ratios());

@@ -351,6 +351,27 @@ class Camera2 extends CameraViewImpl implements MediaRecorder.OnInfoListener, Me
     }
 
     @Override
+    boolean isFacingSupported(int facing) {
+        try {
+            int internalFacing = INTERNAL_FACINGS.get(facing);
+            final String[] ids = mCameraManager.getCameraIdList();
+            if (ids.length == 0) { // No camera
+                return false;
+            }
+            for (String id : ids) {
+                CameraCharacteristics characteristics = mCameraManager.getCameraCharacteristics(id);
+                Integer internal = characteristics.get(CameraCharacteristics.LENS_FACING);
+                if (internal == internalFacing) {
+                    return true;
+                }
+            }
+        } catch (CameraAccessException e) {
+            // well...
+        }
+        return false;
+    }
+
+    @Override
     Set<AspectRatio> getSupportedAspectRatios() {
         return mPreviewSizes.ratios();
     }

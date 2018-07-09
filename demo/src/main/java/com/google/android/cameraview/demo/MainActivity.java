@@ -198,6 +198,11 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
+
+        if (!mCameraView.isFacingSupported(CameraView.FACING_FRONT)) {
+            menu.removeItem(R.id.switch_camera);
+        }
+
         return true;
     }
 
