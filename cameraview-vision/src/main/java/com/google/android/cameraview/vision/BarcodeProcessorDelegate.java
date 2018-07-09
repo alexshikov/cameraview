@@ -51,7 +51,7 @@ public class BarcodeProcessorDelegate implements FrameProcessorDelegate<SparseAr
         lastDetectionTime = t;
 
         for (int i = 0; i < size; i++) {
-            onBarcodeDetected(result.get(result.keyAt(i)));
+            onBarcodeDetected(result.valueAt(i));
         }
     }
 
