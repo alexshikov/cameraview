@@ -21,15 +21,16 @@
     android:background="@color/primary"
     tools:context=".MainActivity">
 
-    <com.google.android.cameraview.CameraView
+    <com.google.android.cameraview.vision.BarcodeScannerView
         android:id="@+id/camera"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:adjustViewBounds="true"
-        android:background="@android:color/black"/>
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="100dp"
+        android:scaleType="centerCrop"
+        android:background="@android:color/black"
+        app:aspectRatio="1:1"
+        app:gravity="centerFit"/>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
