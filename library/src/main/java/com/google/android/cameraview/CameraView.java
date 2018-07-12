@@ -498,6 +498,10 @@ public class CameraView extends FrameLayout {
         return mImpl.getSupportedAspectRatios();
     }
 
+    public Set<Size> getSupportedAspectRatioSizes(AspectRatio aspectRatio) {
+        return mImpl.getSupportedAspectRatioSizes(aspectRatio);
+    }
+
     /**
      * Sets the aspect ratio of camera.
      *

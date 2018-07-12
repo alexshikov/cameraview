@@ -377,6 +377,11 @@ class Camera2 extends CameraViewImpl implements MediaRecorder.OnInfoListener, Me
     }
 
     @Override
+    Set<Size> getSupportedAspectRatioSizes(AspectRatio aspectRatio) {
+        return mPreviewSizes.sizes(aspectRatio);
+    }
+
+    @Override
     boolean setAspectRatio(AspectRatio ratio) {
         if (ratio != null && mPreviewSizes.isEmpty()) {
             mInitialRatio = ratio;

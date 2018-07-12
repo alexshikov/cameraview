@@ -54,6 +54,8 @@ abstract class CameraViewImpl {
 
     abstract Set<AspectRatio> getSupportedAspectRatios();
 
+    abstract Set<Size> getSupportedAspectRatioSizes(AspectRatio aspectRatio);
+
     /**
      * @return {@code true} if the aspect ratio was changed.
      */
