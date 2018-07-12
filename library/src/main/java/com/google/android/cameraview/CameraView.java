@@ -662,9 +662,15 @@ public class CameraView extends FrameLayout {
             return;
         }
 
-        //  values reversed intentionally
-        int w = getMeasuredHeight();
-        int h = getMeasuredWidth();
+        int w, h;
+
+        if (mDisplayOrientationDetector.getLastKnownDisplayOrientation() % 180 != 0) {
+            w = getMeasuredWidth();
+            h = getMeasuredHeight();
+        } else {
+            w = getMeasuredHeight();
+            h = getMeasuredWidth();
+        }
 
         AspectRatio ratio = AspectRatioChooser.closestRatio(mImpl.getSupportedAspectRatios(), w, h);
         setAspectRatio(ratio);
