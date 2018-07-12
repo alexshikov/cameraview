@@ -31,6 +31,7 @@ import android.support.v4.os.ParcelableCompat;
 import android.support.v4.os.ParcelableCompatCreatorCallbacks;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.graphics.SurfaceTexture;
@@ -41,6 +42,8 @@ import java.util.ArrayList;
 import java.util.Set;
 
 public class CameraView extends FrameLayout {
+
+    private static final String TAG = "Google.CameraView";
 
     /** The camera device faces the opposite direction as the device's screen. */
     public static final int FACING_BACK = Constants.FACING_BACK;
@@ -673,7 +676,13 @@ public class CameraView extends FrameLayout {
         }
 
         AspectRatio ratio = AspectRatioChooser.closestRatio(mImpl.getSupportedAspectRatios(), w, h);
+        AspectRatio fromAspect = getAspectRatio();
+        Size fromSize = getPreviewSize();
+
         setAspectRatio(ratio);
+
+        Size toSize = getPreviewSize();
+        Log.v(TAG, "Aspect Ratio adjusted from " + fromAspect + " (" + fromSize + ") to " + ratio + "(" + toSize + ")");
     }
 
     private class CallbackBridge implements CameraViewImpl.Callback {
