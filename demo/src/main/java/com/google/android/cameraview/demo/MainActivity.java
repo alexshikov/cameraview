@@ -45,6 +45,7 @@ import android.widget.Toast;
 
 import com.google.android.cameraview.AspectRatio;
 import com.google.android.cameraview.CameraView;
+import com.google.android.cameraview.Size;
 import com.google.android.cameraview.vision.BarcodeProcessor;
 import com.google.android.cameraview.vision.BarcodeProcessorDelegate;
 import com.google.android.cameraview.vision.BarcodeScannerView;
@@ -156,6 +157,15 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
                     REQUEST_CAMERA_PERMISSION);
+        }
+
+        Set<AspectRatio> ratios = mCameraView.getSupportedAspectRatios();
+        for (AspectRatio ratio: ratios) {
+            Log.i(TAG, "Supported Ratio: " + ratio);
+            Set<Size> sizes = mCameraView.getSupportedAspectRatioSizes(ratio);
+            for (Size size: sizes) {
+                Log.i(TAG, " Size: " + size);
+            }
         }
     }
 
