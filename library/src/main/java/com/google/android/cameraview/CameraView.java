@@ -39,6 +39,7 @@ import android.graphics.SurfaceTexture;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 public class CameraView extends FrameLayout {
@@ -675,7 +676,9 @@ public class CameraView extends FrameLayout {
             h = getMeasuredWidth();
         }
 
-        AspectRatio ratio = AspectRatioChooser.closestRatio(mImpl.getSupportedAspectRatios(), w, h);
+        Set<AspectRatio> ratios = getOptimizedAspectRatios(w, h);
+
+        AspectRatio ratio = AspectRatioChooser.closestRatio(ratios, w, h);
         AspectRatio fromAspect = getAspectRatio();
         Size fromSize = getPreviewSize();
 
@@ -683,6 +686,36 @@ public class CameraView extends FrameLayout {
 
         Size toSize = getPreviewSize();
         Log.v(TAG, "Aspect Ratio adjusted from " + fromAspect + " (" + fromSize + ") to " + ratio + "(" + toSize + ")");
+    }
+
+    Set<AspectRatio> getOptimizedAspectRatios(int w, int h) {
+        int minScale = 3;
+
+        ArrayList<AspectRatio> ratios = new ArrayList<> (mImpl.getSupportedAspectRatios());
+        for (int i = ratios.size() - 1; i >= 0; i--) {
+            AspectRatio ratio = ratios.get(i);
+
+            // don't process default aspect ratio
+            if (ratio == Constants.DEFAULT_ASPECT_RATIO) {
+                continue;
+            }
+
+            // remove sizes that are too small
+            ArrayList<Size> sizes = new ArrayList<>(mImpl.getSupportedAspectRatioSizes(ratio));
+            for (int j = sizes.size() - 1; j >= 0; j--) {
+                Size size = sizes.get(j);
+                if (size.getWidth() * minScale < w || size.getHeight() * minScale < h) {
+                    sizes.remove(i);
+                }
+            }
+
+            // if there is no more sizes left - drop aspect ratio
+            if (sizes.size() == 0) {
+                ratios.remove(i);
+            }
+        }
+
+        return new HashSet<>(ratios);
     }
 
     private class CallbackBridge implements CameraViewImpl.Callback {
