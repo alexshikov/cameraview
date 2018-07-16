@@ -705,7 +705,7 @@ public class CameraView extends FrameLayout {
             for (int j = sizes.size() - 1; j >= 0; j--) {
                 Size size = sizes.get(j);
                 if (size.getWidth() * minScale < w || size.getHeight() * minScale < h) {
-                    sizes.remove(i);
+                    sizes.remove(j);
                 }
             }
 
