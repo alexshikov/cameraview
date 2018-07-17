@@ -689,7 +689,7 @@ public class CameraView extends FrameLayout {
     }
 
     Set<AspectRatio> getOptimizedAspectRatios(int w, int h) {
-        int minScale = 3;
+        int minScale = 2;
 
         ArrayList<AspectRatio> ratios = new ArrayList<> (mImpl.getSupportedAspectRatios());
         for (int i = ratios.size() - 1; i >= 0; i--) {
