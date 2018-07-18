@@ -490,6 +490,7 @@ public class CameraView extends FrameLayout {
      */
     public void setFacing(@Facing int facing) {
         mImpl.setFacing(facing);
+        requestLayout();
     }
 
     /**
