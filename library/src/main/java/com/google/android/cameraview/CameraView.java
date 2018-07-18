@@ -658,6 +658,10 @@ public class CameraView extends FrameLayout {
     }
 
     void adjustRatioIfNeeded() {
+        if (!mAdjustViewBounds) {
+            return;
+        }
+
         if (mGravity != GRAVITY_CENTER_FIT && mGravity != GRAVITY_CENTER_FILL) {
             return;
         }
