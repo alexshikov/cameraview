@@ -18,6 +18,7 @@ package com.google.android.cameraview;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.media.CamcorderProfile;
 import android.os.Build;
@@ -236,7 +237,7 @@ public class CameraView extends FrameLayout {
         int width = getMeasuredWidth();
         int height = getMeasuredHeight();
         AspectRatio ratio = getAspectRatio();
-        if (mDisplayOrientationDetector.getLastKnownDisplayOrientation() % 180 == 0) {
+        if (isPortrait ()) {
             ratio = ratio.inverse();
         }
         assert ratio != null;
@@ -276,7 +277,7 @@ public class CameraView extends FrameLayout {
         int correctWidth = (int)height;
 
         if (mGravity == GRAVITY_CENTER_FILL) {
-            if (mDisplayOrientationDetector.getLastKnownDisplayOrientation() % 180 != 0) {
+            if (!isPortrait()) {
                 if (ratio * height < width) {
                     correctHeight = (int) (width / ratio);
                     correctWidth = (int) width;
@@ -294,7 +295,7 @@ public class CameraView extends FrameLayout {
                 }
             }
         } else if (mGravity == GRAVITY_CENTER_FIT) {
-            if (mDisplayOrientationDetector.getLastKnownDisplayOrientation() % 180 != 0) {
+            if (!isPortrait()) {
                 if (ratio * height > width) {
                     correctHeight = (int) (width / ratio);
                     correctWidth = (int) width;
@@ -320,6 +321,17 @@ public class CameraView extends FrameLayout {
         if (changed) {
             adjustRatioIfNeeded();
         }
+    }
+
+    boolean isPortrait() {
+        // -- WARNING --
+        // there are devices like Samsung Galaxy Tab 4 10.1 where display orientation = 0
+        // while the device actually in landscape mode (because it's "natural" orientation).
+        // That's why we have to use configuration orientation because it returns correct value.
+        // There is no need to change Camera implementations as they properly rotate the preview.
+        // It's important inside this class only.
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+        //return mDisplayOrientationDetector.getLastKnownDisplayOrientation() % 180 == 0;
     }
 
     @Override
@@ -668,7 +680,7 @@ public class CameraView extends FrameLayout {
 
         int w, h;
 
-        if (mDisplayOrientationDetector.getLastKnownDisplayOrientation() % 180 != 0) {
+        if (!isPortrait()) {
             w = getMeasuredWidth();
             h = getMeasuredHeight();
         } else {
