@@ -44,6 +44,7 @@ import android.os.Looper;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -729,7 +730,7 @@ class Camera2 extends CameraViewImpl implements MediaRecorder.OnInfoListener, Me
         }
         mPictureSizes.clear();
         collectPictureSizes(mPictureSizes, map);
-        for (AspectRatio ratio : mPreviewSizes.ratios()) {
+        for (AspectRatio ratio : new ArrayList<>(mPreviewSizes.ratios())) {
             if (!mPictureSizes.ratios().contains(ratio)) {
                 mPreviewSizes.remove(ratio);
             }
@@ -742,7 +743,7 @@ class Camera2 extends CameraViewImpl implements MediaRecorder.OnInfoListener, Me
 
     protected void collectPictureSizes(SizeMap sizes, StreamConfigurationMap map) {
         for (android.util.Size size : map.getOutputSizes(mImageFormat)) {
-            mPictureSizes.add(new Size(size.getWidth(), size.getHeight()));
+            sizes.add(new Size(size.getWidth(), size.getHeight()));
         }
     }
 
